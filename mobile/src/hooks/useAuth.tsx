@@ -1,5 +1,5 @@
 import { useContext } from 'react'
-import { AuthContext, AuthContextDataProps } from '../../contexts/Auth'
+import { AuthContext, AuthContextDataProps } from '../contexts/Auth'
 
 
 function useAuth(): AuthContextDataProps {

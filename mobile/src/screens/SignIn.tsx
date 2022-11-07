@@ -2,7 +2,7 @@ import { Center, Icon, Text } from 'native-base';
 import { Fontisto } from '@expo/vector-icons'
 import Button from '../components/Button';
 import Logo from '../assets/logo.svg';
-import useAuth from '../assets/hooks/useAuth';
+import useAuth from '../hooks/useAuth';
 function SignIn() {
     const { signIn, user } = useAuth()
     console.log(user)

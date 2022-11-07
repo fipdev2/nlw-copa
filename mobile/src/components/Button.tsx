@@ -23,6 +23,7 @@ function Button({ title, type = 'primary', ...rest }: ButtonProps) {
                 {...rest}>
                 <Text
                     fontSize={'sm'}
+                    fontFamily={'heading'}
                     color={type === 'secondary' ? 'white':'black'}
                 >
                     {title}

@@ -4,6 +4,7 @@ import * as Google from 'expo-auth-session/providers/google';
 import * as WebBrowser from 'expo-web-browser';
 import * as React from 'react';
 
+WebBrowser.maybeCompleteAuthSession();
 
 interface userProps {
     name: string
@@ -13,6 +14,7 @@ interface userProps {
 export interface AuthContextDataProps {
     user: userProps
     signIn: () => Promise<void>
+    isUserLoading: boolean
 }
 
 interface AuthProviderProps {
@@ -21,12 +23,13 @@ interface AuthProviderProps {
 export const AuthContext = createContext({} as AuthContextDataProps);
 
 function AuthContextProvider({ children }: AuthProviderProps) {
+    const [user, setUser] = React.useState({} as userProps)
     const [isUserLoading, setIsUserLoading] = React.useState(false)
 
     const [request, response, prompAsync] = Google.useAuthRequest({
         clientId: '392230282637-plosekbnecm7h1qe5ci7hrkrdfhbcoib.apps.googleusercontent.com',
         redirectUri: AuthSession.makeRedirectUri({ useProxy: true }),
-        scopes: ['profile', 'user']
+        scopes: ['profile', 'email']
 
     })
     async function signIn() {
@@ -49,15 +52,13 @@ function AuthContextProvider({ children }: AuthProviderProps) {
         if (response?.type === 'success' && response.authentication?.accessToken) {
             signInWithGoogle(response.authentication?.accessToken)
         }
-    }, [])
+    }, [response])
     return (
         <AuthContext.Provider value={
             {
+                isUserLoading,
                 signIn,
-                user: {
-                    name: 'Blabla',
-                    avatarUrl: ''
-                }
+                user
             }}>
             {children}
         </AuthContext.Provider >
