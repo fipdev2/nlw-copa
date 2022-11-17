@@ -1,10 +1,52 @@
-import { Heading, Text, VStack } from 'native-base';
 import * as React from 'react';
-import { Header } from '../components/Header';
 import Logo from '../assets/logo.svg'
-import { Input } from '../components/Input';
 import Button from '../components/Button';
+import { Heading, Text, VStack, useToast } from 'native-base';
+import { Header } from '../components/Header';
+import { Input } from '../components/Input';
+import { api } from '../services/api';
+import useAuth from '../hooks/useAuth';
+
+
+
 function New() {
+    const [title, setTitle] = React.useState('');
+    const [isLoading, setIsLoading] = React.useState(false);
+    const { user } = useAuth()
+
+    const toast = useToast();
+
+    async function handlePoolCreate() {
+        if (!title.trim()) {
+            return toast.show({
+                title: 'Informe um nome para o seu bolão',
+                placement: 'top',
+                bgColor: 'red.500'
+            })
+        }
+        try {
+            setIsLoading(true);
+            await api.post('/pools', { title, ownerId:user.sub })
+            toast.show({
+                title: 'Bolão criado com sucesso',
+                placement: 'top',
+                bgColor: 'green.500'
+            })
+            setTitle('')
+        }
+        catch (e) {
+            console.log(e);
+            toast.show({
+                title: 'Não foi possível criar o bolão',
+                placement: 'top',
+                bgColor: 'red.500'
+            })
+        }
+        finally {
+            setIsLoading(false);
+        }
+    }
+
     return (
         <>
             <VStack
@@ -32,9 +74,14 @@ function New() {
                     <Input
                         mb={2}
                         placeholder='Qual nome do seu bolão?'
+                        onChangeText={setTitle}
+                        value={title}
                     />
                     <Button
                         title='CRIAR MEU BOLÃO'
+                        onPress={handlePoolCreate}
+                        isLoading={isLoading}
+                        _loading={{ _spinner: { color: 'black' } }}
                     />
                     <Text
                         color='gray.100'

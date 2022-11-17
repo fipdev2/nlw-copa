@@ -28,7 +28,7 @@ export default function Participants({participants, count }: Props) {
             marginRight={-3}
             borderColor="gray.800"
           >
-           {/* {participant.user?.name?.at(0).toUpperCase()} */}
+           {participant.user?.name?.at(0).toUpperCase()}
           </Avatar>
         ))
       }
